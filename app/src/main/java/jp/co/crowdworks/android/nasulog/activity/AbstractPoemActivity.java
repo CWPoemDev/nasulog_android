@@ -22,8 +22,6 @@ import android.widget.Toast;
 
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
-import io.realm.RealmObject;
-import io.realm.RealmResults;
 import jp.co.crowdworks.android.nasulog.Prefs;
 import jp.co.crowdworks.android.nasulog.R;
 import jp.co.crowdworks.android.nasulog.model.Poem;
@@ -172,8 +170,8 @@ abstract class AbstractPoemActivity extends AbstractActivity {
     private void logout(){
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        removeAll(realm.allObjects(Poem.class));
-        removeAll(realm.allObjects(User.class));
+        realm.clear(Poem.class);
+        realm.clear(User.class);
         realm.commitTransaction();
 
         CookieManager.getInstance().removeAllCookie();
@@ -188,10 +186,6 @@ abstract class AbstractPoemActivity extends AbstractActivity {
         // TODO: サーバーセッションのおそうじ
 
         showEntryActivity();
-    }
-
-    private <T extends RealmObject> void removeAll(RealmResults<T> results) {
-        for(int i=0; i<results.size(); i++) results.removeLast();
     }
 
     private void showEntryActivity(){
