@@ -7,7 +7,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import jp.co.crowdworks.android.nasulog.model.migration.Migration1;
+import jp.co.crowdworks.android.nasulog.model.migration.Migration2;
 
 public class NasulogApplication extends Application {
     @Override
@@ -25,8 +25,8 @@ public class NasulogApplication extends Application {
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .name("default.realm")
-                .migration(new Migration1())
-                .schemaVersion(1)
+                .migration(new Migration2())
+                .schemaVersion(2)
                 .build();
         Realm.setDefaultConfiguration(config);
     }

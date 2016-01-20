@@ -15,6 +15,7 @@ import java.util.Iterator;
 import hugo.weaving.DebugLog;
 import jp.co.crowdworks.android.nasulog.Prefs;
 import jp.co.crowdworks.android.nasulog.service.observer.LoadPoemReceiver;
+import jp.co.crowdworks.android.nasulog.service.observer.LoadUserReceiver;
 import jp.co.crowdworks.android.nasulog.service.observer.Registerable;
 
 public class NasulogAPIService extends Service {
@@ -67,6 +68,7 @@ public class NasulogAPIService extends Service {
 
     private static final Class[] REGISTERABLE_CLASSES = {
             LoadPoemReceiver.class
+            , LoadUserReceiver.class
     };
 
     private final ArrayList<Registerable> mListeners = new ArrayList<>();

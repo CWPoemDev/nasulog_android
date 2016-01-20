@@ -20,14 +20,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import jp.co.crowdworks.android.nasulog.Prefs;
 import jp.co.crowdworks.android.nasulog.R;
 import jp.co.crowdworks.android.nasulog.model.Poem;
 import jp.co.crowdworks.android.nasulog.model.User;
 import jp.co.crowdworks.android.nasulog.service.NasulogAPIService;
 import jp.co.crowdworks.android.nasulog.service.observer.LoadPoemReceiver;
+import jp.co.crowdworks.android.nasulog.service.observer.LoadUserReceiver;
+import rx.Observable;
 
 abstract class AbstractPoemActivity extends AbstractActivity {
     protected ActionBarDrawerToggle mDrawerToggle;
@@ -65,6 +71,17 @@ abstract class AbstractPoemActivity extends AbstractActivity {
         }
     }
     private void setupSideMenu(){
+
+        Observable<RealmResults<User>> userlistObservable = Realm.getDefaultInstance().where(User.class).isNotNull("email").findAllSorted("id", Sort.DESCENDING).asObservable();
+        userlistObservable
+                .filter(users -> users.size()>0)
+                .map(users -> users.first())
+                .subscribe(user -> {
+                    Picasso.with(AbstractPoemActivity.this).load(user.getImage()).into((ImageView) findViewById(R.id.img_avatar));
+                    ((TextView) findViewById(R.id.txt_username)).setText(user.getName());
+                    ((TextView) findViewById(R.id.txt_email)).setText(user.getEmail());
+                });
+
         ListView listView = (ListView) findViewById(R.id.drawer_menu_listview);
 
         SideMenuItem[] items = new SideMenuItem[]{
@@ -152,6 +169,10 @@ abstract class AbstractPoemActivity extends AbstractActivity {
         }
     }
 
+    protected void requestUser() {
+        Intent intent = new Intent(LoadUserReceiver.REQUEST_USER);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
 
     @DebugLog
     protected void requestPoemList(){
