@@ -105,6 +105,9 @@ public class PoemDetailActivity extends AbstractPoemActivity {
             final TextView txt = (TextView) findViewById(R.id.txt_poem_description);
             mAPI.getMarkedDown(poem.getDescription().trim()).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(html -> {
                 txt.setText(Html.fromHtml(html));
+            }, err -> {
+                Log.w(TAG, "failed to markdown", err);
+                txt.setText(poem.getDescription().trim());
             });
         }
 
