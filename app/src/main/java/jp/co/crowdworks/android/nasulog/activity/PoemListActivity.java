@@ -39,6 +39,7 @@ public class PoemListActivity extends AbstractPoemActivity {
 
         setupToolbar();
         setupListView();
+        requestUser();
         requestPoemList();
     }
 

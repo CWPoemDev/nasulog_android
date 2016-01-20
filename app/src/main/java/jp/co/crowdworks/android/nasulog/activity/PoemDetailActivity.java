@@ -59,6 +59,7 @@ public class PoemDetailActivity extends AbstractPoemActivity {
         mAPI = new NasulogAPI(getServer(), Prefs.get(this).getString(Prefs.KEY_TOKEN, null));
 
         setupToolbar();
+        requestUser();
         requestPoem(poemId);
 
         Observable<Poem> poemObservable = Realm.getDefaultInstance().where(Poem.class).equalTo("id", poemId).findFirst().asObservable();

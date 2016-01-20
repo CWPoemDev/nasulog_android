@@ -109,6 +109,23 @@ public class NasulogAPI {
         );
     }
 
+    public Observable<JSONObject> getUser() {
+        String url = "http://"+mHost+"/user.json";
+
+        return rxGET(url).flatMap(response ->
+                Observable.create(subscriber -> {
+                    try {
+                        JSONObject user = new JSONObject(response.body().string()).getJSONObject("user");
+                        subscriber.onNext(user);
+                        subscriber.onCompleted();
+                    }
+                    catch (Exception e) {
+                        subscriber.onError(e);
+                    }
+                })
+        );
+    }
+
     public Observable<String> getMarkedDown(@NonNull String text) {
 
         FormBody body = new FormBody.Builder()
