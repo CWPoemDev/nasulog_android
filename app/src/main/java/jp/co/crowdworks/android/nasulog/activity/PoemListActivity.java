@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -39,15 +39,15 @@ public class PoemListActivity extends AbstractPoemActivity {
 
         setupToolbar();
         setupListView();
+        setupActionButton();
         requestUser();
         requestPoemList();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.test, menu);
-        return true;
+    protected void onResume() {
+        super.onResume();
+        showActionButtonIfHidden();
     }
 
     private void setupToolbar(){
@@ -137,5 +137,28 @@ public class PoemListActivity extends AbstractPoemActivity {
             final Poem poem = realmResults.get(position);
             poemListViewHolder.bind(poem);
         }
+    }
+
+
+    private void setupActionButton(){
+        findViewById(R.id.btn_compose).setOnClickListener(v -> {
+            FloatingActionButton btn = (FloatingActionButton)v;
+            btn.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                @Override
+                public void onHidden(FloatingActionButton fab) {
+                    showComposeActivity();
+                }
+            });
+        });
+    }
+
+    private void showComposeActivity() {
+        Intent intent = new Intent(this, ComposePoemActivity.class);
+        startActivity(intent);
+    }
+
+    private void showActionButtonIfHidden() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btn_compose);
+        if (!fab.isShown()) fab.show();
     }
 }

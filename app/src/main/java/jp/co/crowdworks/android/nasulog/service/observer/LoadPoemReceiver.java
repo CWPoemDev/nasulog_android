@@ -7,6 +7,9 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.realm.Realm;
 import jp.co.crowdworks.android.nasulog.model.Poem;
 import jp.co.crowdworks.android.nasulog.service.NasulogAPI;
@@ -32,8 +35,9 @@ public class LoadPoemReceiver extends BroadcastReceiver implements Registerable 
         final String action = intent.getAction();
         if (REQUEST_POEMS.equals(action)) {
             final Realm realm = Realm.getDefaultInstance();
-            mAPI.getAllPoems().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(jsonPoem -> {
+            mAPI.getAllPoems().onBackpressureBuffer().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(jsonPoem -> {
                 if (!realm.isInTransaction()) realm.beginTransaction();
+                customizeJson(jsonPoem);
                 realm.createOrUpdateObjectFromJson(Poem.class, jsonPoem);
             }, err -> {
                 Log.e(TAG, "error", err);
@@ -47,8 +51,9 @@ public class LoadPoemReceiver extends BroadcastReceiver implements Registerable 
             if (id==-1) return;
 
             final Realm realm = Realm.getDefaultInstance();
-            mAPI.getPoem(id).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(jsonPoem -> {
+            mAPI.getPoem(id).onBackpressureBuffer().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(jsonPoem -> {
                 realm.beginTransaction();
+                customizeJson(jsonPoem);
                 realm.createOrUpdateObjectFromJson(Poem.class, jsonPoem);
             }, err -> {
                 Log.e(TAG, "error", err);
@@ -56,6 +61,16 @@ public class LoadPoemReceiver extends BroadcastReceiver implements Registerable 
             }, () -> {
                 if(realm.isInTransaction()) realm.commitTransaction();
             });
+        }
+    }
+
+    private void customizeJson(JSONObject jsonPoem) {
+        try {
+            jsonPoem.put("syncstate", 2);
+        }
+        catch (JSONException e) {
+            // 参考：http://developer.android.com/intl/ja/reference/org/json/JSONException.html
+            throw new RuntimeException(e);
         }
     }
 

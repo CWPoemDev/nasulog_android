@@ -3,6 +3,7 @@ package jp.co.crowdworks.android.nasulog.service;
 import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -11,7 +12,9 @@ import jp.co.crowdworks.android.nasulog.helper.HttpError;
 import jp.co.crowdworks.android.nasulog.helper.OkHttpHelper;
 import jp.co.crowdworks.android.nasulog.helper.RedirectNotAllowdError;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import rx.Observable;
 
@@ -141,7 +144,7 @@ public class NasulogAPI {
         return Observable.create(subscriber -> {
             try {
                 Response response = OkHttpHelper.getClient().newCall(request).execute();
-                if (response.isSuccessful()) { //302は勝手にリダイレクトしてしまってisRedirectで判定が効かないっぽい
+                if(response.isSuccessful()) {
                     subscriber.onNext(response.body().string());
                     subscriber.onCompleted();
                 }
@@ -150,6 +153,43 @@ public class NasulogAPI {
                 subscriber.onError(e);
             }
         });
+    }
+
+    public Observable<JSONObject> submitPoem(String title, String description) {
+        String url = "http://"+mHost+"/poems.json";
+
+        JSONObject json = new JSONObject();
+        try{
+            json.put("poem", new JSONObject()
+                    .put("title", title)
+                    .put("description", description));
+        }
+        catch (JSONException e) {}
+
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Cookie", "_nasulog_session="+ mToken)
+                .post(RequestBody.create(MediaType.parse("application/json"), json.toString()))
+                .build();
+
+        return Observable.create(subscriber -> {
+            try {
+                Response response = OkHttpHelper.getClient().newCall(request).execute();
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject poem = new JSONObject(response.body().string()).getJSONObject("poem");
+                        subscriber.onNext(poem);
+                        subscriber.onCompleted();
+                    } catch (Exception e) {
+                        subscriber.onError(e);
+                    }
+                }
+                else subscriber.onError(new HttpError(response));
+            } catch (IOException e) {
+                subscriber.onError(e);
+            }
+        });
+
     }
 
     public Observable<Boolean> setPoemRead(long poemId) {
@@ -169,7 +209,7 @@ public class NasulogAPI {
         return Observable.create(subscriber -> {
             try {
                 Response response = OkHttpHelper.getClient().newCall(request).execute();
-                if (response.isSuccessful()) { //302は勝手にリダイレクトしてしまってisRedirectで判定が効かないっぽい
+                if(response.isSuccessful()) {
                     subscriber.onNext(true);
                     subscriber.onCompleted();
                 }
