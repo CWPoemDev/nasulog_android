@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import hugo.weaving.DebugLog;
+import io.realm.Realm;
 import jp.co.crowdworks.android.nasulog.Prefs;
 import jp.co.crowdworks.android.nasulog.R;
 import jp.co.crowdworks.android.nasulog.fragment.LoginFragment;
@@ -13,6 +14,8 @@ import jp.co.crowdworks.android.nasulog.fragment.ServerConfigFragment;
 import jp.co.crowdworks.android.nasulog.fragment.ServerConnectingFragment;
 import jp.co.crowdworks.android.nasulog.helper.ConstrainedActionManager;
 import jp.co.crowdworks.android.nasulog.helper.LaunchUtil;
+import jp.co.crowdworks.android.nasulog.model.Poem;
+import jp.co.crowdworks.android.nasulog.model.User;
 
 public class EntryActivity extends AbstractFrameLayoutActivity {
 
@@ -90,6 +93,12 @@ public class EntryActivity extends AbstractFrameLayoutActivity {
     ConstrainedActionManager mManager = new ConstrainedActionManager() {
         @Override
         protected void action() {
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.clear(Poem.class);
+            realm.clear(User.class);
+            realm.commitTransaction();
+
             LaunchUtil.showPoemListActivity(EntryActivity.this);
         }
     };
