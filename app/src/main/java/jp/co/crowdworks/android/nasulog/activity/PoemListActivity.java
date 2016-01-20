@@ -103,7 +103,7 @@ public class PoemListActivity extends AbstractPoemActivity {
                 Picasso.with(itemView.getContext()).load(poem.getAuthor().getImage()).into(mIcon);
                 mAuthorName.setText(poem.getAuthor().getName());
             }
-            mCreatedAt.setText(poem.getCreated_at().toString());
+            if (poem.getCreated_at()!=null) mCreatedAt.setText(poem.getCreated_at().toString());
 
             itemView.setOnClickListener(v -> {
                 if (mListener!=null) mListener.onPoemItemClick(poem);
