@@ -57,12 +57,12 @@ public class NasulogAPI {
     }
 
     public Observable<Response> checkConnection() {
-        String url = "http://"+mHost+"/poems.json";
+        String url = "http://"+mHost+"/api/poems.json";
         return rxGET(url, false); //302はログイン画面に飛ばされる動作なので、エラー扱い
     }
 
     public Observable<JSONObject> getAllPoems() {
-        String url = "http://"+mHost+"/home.json";
+        String url = "http://"+mHost+"/api/home.json";
 
         return rxGET(url).flatMap(response ->
                 Observable.create(subscriber -> {
@@ -79,7 +79,7 @@ public class NasulogAPI {
     }
 
     public Observable<JSONObject> getMyPoems() {
-        String url = "http://"+mHost+"/poems.json";
+        String url = "http://"+mHost+"/api/poems.json";
 
         return rxGET(url).flatMap(response ->
             Observable.create(subscriber -> {
@@ -96,7 +96,7 @@ public class NasulogAPI {
     }
 
     public Observable<JSONObject> getPoem(long id) {
-        String url = "http://"+mHost+"/poems/"+id+".json";
+        String url = "http://"+mHost+"/api/poems/"+id+".json";
 
         return rxGET(url).flatMap(response ->
             Observable.create(subscriber -> {
@@ -113,7 +113,7 @@ public class NasulogAPI {
     }
 
     public Observable<JSONObject> getUser() {
-        String url = "http://"+mHost+"/user.json";
+        String url = "http://"+mHost+"/api/user.json";
 
         return rxGET(url).flatMap(response ->
                 Observable.create(subscriber -> {
@@ -156,7 +156,7 @@ public class NasulogAPI {
     }
 
     public Observable<JSONObject> submitPoem(String title, String description) {
-        String url = "http://"+mHost+"/poems.json";
+        String url = "http://"+mHost+"/api/poems.json";
 
         JSONObject json = new JSONObject();
         try{
@@ -193,7 +193,7 @@ public class NasulogAPI {
     }
 
     public Observable<Boolean> setPoemRead(long poemId) {
-        String url = "http://"+mHost+"/poems/"+poemId+"/read_poems.json";
+        String url = "http://"+mHost+"/api/poems/"+poemId+"/read_poems.json";
 
         // ダミーのボディを付けないとOkHttpはPOSTしてくれないので
         FormBody body = new FormBody.Builder()
