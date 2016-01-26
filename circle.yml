@@ -28,6 +28,6 @@ deployment:
     branch: [master, setup_circleci]
     commands:
       - find . -name app-release.apk -exec mv {} ./app-release.apk \;
-      - "curl --request PUT -H 'Authorization: Bearer $DROPBOX_TOKEN' https://api-content.dropbox.com/1/files_put/auto/ -T app-release.apk"
+      - 'curl --request PUT -H "Authorization: Bearer $DROPBOX_TOKEN" https://api-content.dropbox.com/1/files_put/auto/ -T app-release.apk'
       - ./gradlew publishApkRelease
       - ./circle.git-tag-push.sh `grep versionCode app/build.gradle | awk '{print $2}'`
