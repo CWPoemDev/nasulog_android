@@ -24,8 +24,15 @@ test:
     - ./gradlew assembleRelease --stacktrace -Pcom.android.build.threadPoolSize=1 -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs="-Xms512m -Xmx2048m" -Dorg.gradle.daemon=false
 
 deployment:
+  develop:
+    branch: develop
+    commands:
+      - find . -name app-debug.apk -exec mv {} ./app-debug.apk \;
+      - 'curl --request PUT -H "Authorization: Bearer $DROPBOX_TOKEN" https://api-content.dropbox.com/1/files_put/auto/ -T app-debug.apk'
+
+
   master:
-    branch: [master, setup_circleci]
+    branch: master
     commands:
       - find . -name app-release.apk -exec mv {} ./app-release.apk \;
       - 'curl --request PUT -H "Authorization: Bearer $DROPBOX_TOKEN" https://api-content.dropbox.com/1/files_put/auto/ -T app-release.apk'
