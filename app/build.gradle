@@ -1,6 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.jakewharton.hugo'
+apply plugin: 'com.github.triplet.play'
+
+def getKeyStore() {
+    def path = System.getenv("KEYSTORE_PATH")
+    return file((path==null) ? "../CWPoemDev.jks" : path)
+}
 
 android {
     compileSdkVersion 23
@@ -10,13 +16,22 @@ android {
         applicationId "jp.co.crowdworks.android.nasulog"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "0.0.0"
+    }
+    signingConfigs {
+        release {
+            storeFile getKeyStore()
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -41,4 +56,9 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.2.0'
     compile 'com.facebook.stetho:stetho-okhttp:1.2.0'
     compile 'com.uphyca:stetho_realm:0.8.0'
+}
+
+play {
+    jsonFile = file('../releasekeys.json')
+    track = 'production'
 }
