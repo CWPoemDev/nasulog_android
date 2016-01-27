@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.jakewharton.hugo'
+apply plugin: 'com.github.triplet.play'
+
+def getKeyStore() {
+    def path = System.getenv("KEYSTORE_PATH")
+    return file((path==null) ? "../CWPoemDev.jks" : path)
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "jp.co.crowdworks.android.nasulog"
+        minSdkVersion 17
+        targetSdkVersion 23
+        versionCode 4
+        versionName "0.0.1"
+    }
+    signingConfigs {
+        release {
+            storeFile getKeyStore()
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+
+    compile 'com.squareup.okhttp3:okhttp:3.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.github.thorbenprimke:realm-recyclerview:0.9.12'
+    compile 'io.realm:realm-android:0.87.2'
+
+    compile 'com.facebook.stetho:stetho:1.2.0'
+    compile 'com.facebook.stetho:stetho-okhttp:1.2.0'
+    compile 'com.uphyca:stetho_realm:0.8.0'
+}
+
+play {
+    jsonFile = file('../releasekeys.json')
+    track = 'production'
+}

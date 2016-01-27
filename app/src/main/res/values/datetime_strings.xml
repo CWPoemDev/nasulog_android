@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time_ago_seconds">1分以内</string>
+    <string name="time_ago_minute">1分前</string>
+    <string name="time_ago_minutes">%d 分前</string>
+    <string name="time_ago_hour">約1時間前</string>
+    <string name="time_ago_hours">約%d時間前</string>
+    <string name="time_ago_day">昨日</string>
+    <string name="time_ago_days">%d日前</string>
+    <string name="time_ago_month">1ヶ月前</string>
+    <string name="time_ago_months">%dヶ月前</string>
+    <string name="time_ago_year">1年前</string>
+    <string name="time_ago_years">%d年前</string>
+</resources>

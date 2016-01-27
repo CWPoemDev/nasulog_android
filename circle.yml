@@ -1,0 +1,40 @@
+machine:
+  environment:
+    JAVA_HOME: /usr/lib/jvm/jdk1.8.0
+    ANDROID_HOME: /usr/local/android-sdk-linux
+
+checkout:
+  post:
+    - git submodule init
+    - git submodule update
+
+dependencies:
+  pre:
+    - echo "sdk.dir="$ANDROID_HOME > local.properties
+    - echo $JKS_BASE64 | base64 --decode > CWPoemDev.jks
+    - echo $RELEASE_KEYS_BASE64 | base64 --decode > releasekeys.json
+
+  override:
+    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-23.0.1,android-23,extra-android-support
+    - ./gradlew dependencies
+
+
+test:
+  override:
+    - ./gradlew assembleRelease --stacktrace -Pcom.android.build.threadPoolSize=1 -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs="-Xms512m -Xmx2048m" -Dorg.gradle.daemon=false
+
+deployment:
+  # develop:
+  #   branch: develop
+  #   commands:
+  #     - find . -name app-debug.apk -exec mv {} ./app-debug.apk \;
+  #     - 'curl --request PUT -H "Authorization: Bearer $DROPBOX_TOKEN" https://api-content.dropbox.com/1/files_put/auto/ -T app-debug.apk'
+  #
+  #
+  master:
+    branch: master
+    commands:
+      - find . -name app-release.apk -exec mv {} ./app-release.apk \;
+      - 'curl --request PUT -H "Authorization: Bearer $DROPBOX_TOKEN" https://api-content.dropbox.com/1/files_put/auto/ -T app-release.apk'
+      - ./gradlew publishApkRelease
+      - ./circle.git-tag-push.sh `grep versionCode app/build.gradle | awk '{print $2}'`
