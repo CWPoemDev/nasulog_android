@@ -61,9 +61,10 @@ public class PoemListActivity extends AbstractPoemActivity {
         RecyclerView poemListview = (RecyclerView) findViewById(R.id.poem_listview);
 
         RealmResults<Poem> resultPoems = Realm.getDefaultInstance().where(Poem.class).findAllSorted("created_at", Sort.DESCENDING);
-        RecyclerView.Adapter adapter = new PoemListAdapter(this, resultPoems).setOnItemClickListener(poem->{
+        PoemListAdapter adapter = new PoemListAdapter(this, resultPoems).setOnItemClickListener(poem->{
             showPoemDetailActivity(poem);
         });
+        adapter.addFooter();
         poemListview.setAdapter(adapter);
 
 
@@ -136,6 +137,16 @@ public class PoemListActivity extends AbstractPoemActivity {
         public void onBindRealmViewHolder(PoemListViewHolder poemListViewHolder, int position) {
             final Poem poem = realmResults.get(position);
             poemListViewHolder.bind(poem);
+        }
+
+        @Override
+        public PoemListViewHolder onCreateFooterViewHolder(ViewGroup viewGroup) {
+            View root = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.listitem_dummy_footer, viewGroup, false);
+            return new PoemListViewHolder(root);
+        }
+
+        @Override
+        public void onBindFooterViewHolder(PoemListViewHolder holder, int position) {
         }
     }
 

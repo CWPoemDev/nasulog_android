@@ -9,7 +9,7 @@
 
         <item name="actionModeBackground">?attr/colorPrimaryDark</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="19">true</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
+        <item name="android:windowTranslucentNavigation" tools:targetApi="19">true</item>
 
         <item name="windowActionModeOverlay">true</item>
     </style>

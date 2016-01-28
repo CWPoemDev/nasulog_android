@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#25306C</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="light_background">@android:color/white</color>
+    <color name="light_background">#eeeeee</color>
     <color name="divider">#22000000</color>
 
     <!-- card colors -->
