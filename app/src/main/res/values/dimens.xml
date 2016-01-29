@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="status_bar_height">0dp</dimen>
-    <dimen name="minus_status_bar_height">0dp</dimen>
+    <dimen name="dummy_footer_height">128dp</dimen>
 </resources>

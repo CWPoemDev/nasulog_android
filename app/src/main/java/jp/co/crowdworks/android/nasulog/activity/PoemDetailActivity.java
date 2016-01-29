@@ -21,6 +21,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import jp.co.crowdworks.android.nasulog.Prefs;
 import jp.co.crowdworks.android.nasulog.R;
+import jp.co.crowdworks.android.nasulog.helper.LinkMovementMethodCompat;
 import jp.co.crowdworks.android.nasulog.model.Poem;
 import jp.co.crowdworks.android.nasulog.model.User;
 import jp.co.crowdworks.android.nasulog.service.NasulogAPI;
@@ -103,6 +104,7 @@ public class PoemDetailActivity extends AbstractPoemActivity {
 //            });
 
             final TextView txt = (TextView) findViewById(R.id.txt_poem_description);
+            txt.setMovementMethod(LinkMovementMethodCompat.getInstance());
             mAPI.getMarkedDown(poem.getDescription().trim()).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(html -> {
                 txt.setText(Html.fromHtml(html));
             }, err -> {
