@@ -61,9 +61,8 @@
                     android:orientation="vertical"
                     android:layout_margin="16dp">
 
-                    <TextView
+                    <jp.co.crowdworks.android.nasulog.view.SelectableTextView
                         android:id="@+id/txt_poem_description"
-                        android:textIsSelectable="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
