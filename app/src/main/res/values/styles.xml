@@ -14,6 +14,11 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <style name="FitToSystemWindow">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
     <style name="PoemCard">
         <item name="android:background">@drawable/card_background</item>
         <item name="android:paddingTop">10dp</item>
