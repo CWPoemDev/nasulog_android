@@ -20,9 +20,6 @@ public class NasulogApplication extends Application {
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
 
-//        OkHttpHelper.getClient()
-//                .networkInterceptors().add(new StethoInterceptor());
-
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .name("default.realm")
                 .migration(new Migration3())
