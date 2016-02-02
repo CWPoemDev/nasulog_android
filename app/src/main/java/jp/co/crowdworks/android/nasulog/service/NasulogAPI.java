@@ -62,7 +62,7 @@ public class NasulogAPI {
     }
 
     public Observable<JSONObject> getAllPoems() {
-        String url = "http://"+mHost+"/api/home.json";
+        String url = "http://"+mHost+"/api/poems.json";
 
         return rxGET(url).flatMap(response ->
                 Observable.create(subscriber -> {
@@ -79,7 +79,7 @@ public class NasulogAPI {
     }
 
     public Observable<JSONObject> getMyPoems() {
-        String url = "http://"+mHost+"/api/poems.json";
+        String url = "http://"+mHost+"/api/user/poems.json";
 
         return rxGET(url).flatMap(response ->
             Observable.create(subscriber -> {
