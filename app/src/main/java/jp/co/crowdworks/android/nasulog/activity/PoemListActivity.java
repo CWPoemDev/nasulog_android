@@ -60,7 +60,7 @@ public class PoemListActivity extends AbstractPoemActivity {
     private void setupListView() {
         RecyclerView poemListview = (RecyclerView) findViewById(R.id.poem_listview);
 
-        RealmResults<Poem> resultPoems = Realm.getDefaultInstance().where(Poem.class).findAllSorted("created_at", Sort.DESCENDING);
+        RealmResults<Poem> resultPoems = Realm.getDefaultInstance().where(Poem.class).isNotNull("created_at").findAllSorted("created_at", Sort.DESCENDING);
         PoemListAdapter adapter = new PoemListAdapter(this, resultPoems).setOnItemClickListener(poem->{
             showPoemDetailActivity(poem);
         });

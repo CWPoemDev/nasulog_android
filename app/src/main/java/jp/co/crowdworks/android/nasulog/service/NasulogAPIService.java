@@ -14,10 +14,11 @@ import java.util.Iterator;
 
 import hugo.weaving.DebugLog;
 import jp.co.crowdworks.android.nasulog.Prefs;
+import jp.co.crowdworks.android.nasulog.service.observer.CreatePoemObserver;
 import jp.co.crowdworks.android.nasulog.service.observer.LoadPoemReceiver;
 import jp.co.crowdworks.android.nasulog.service.observer.LoadUserReceiver;
+import jp.co.crowdworks.android.nasulog.service.observer.QuotePoemObserver;
 import jp.co.crowdworks.android.nasulog.service.observer.Registerable;
-import jp.co.crowdworks.android.nasulog.service.observer.CreatePoemObserver;
 
 public class NasulogAPIService extends Service {
     private static final String TAG = NasulogAPIService.class.getName();
@@ -71,6 +72,7 @@ public class NasulogAPIService extends Service {
             LoadPoemReceiver.class
             , LoadUserReceiver.class
             , CreatePoemObserver.class
+            , QuotePoemObserver.class
     };
 
     private final ArrayList<Registerable> mListeners = new ArrayList<>();

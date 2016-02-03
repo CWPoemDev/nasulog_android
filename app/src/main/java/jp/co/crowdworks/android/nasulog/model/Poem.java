@@ -23,6 +23,7 @@ public class Poem extends RealmObject {
     private User author;
     private RealmList<User> read_users;
     private Date created_at;
+    private long original_poem_id;
 
     public long getId() { return id; }
     public int getSyncstate() { return syncstate; }
@@ -31,6 +32,7 @@ public class Poem extends RealmObject {
     public User getAuthor() { return author; }
     public RealmList<User> getRead_users() { return read_users; }
     public Date getCreated_at() { return created_at; }
+    public long getOriginal_poem_id() { return original_poem_id; }
 
     public void setId(long id) { this.id = id; }
     public void setSyncstate(int syncstate) { this.syncstate = syncstate; }
@@ -39,6 +41,23 @@ public class Poem extends RealmObject {
     public void setAuthor(User author) { this.author = author; }
     public void setRead_users(RealmList<User> read_users) { this.read_users = read_users; }
     public void setCreated_at(Date created_at) { this.created_at = created_at; }
+    public void setOriginal_poem_id(long original_poem_id) { this.original_poem_id = original_poem_id; }
+
+    public static void setIdJson(JSONObject jsonPoem, long id) {
+        try {
+            jsonPoem.put("id", id);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void setOriginalPoemIdJson(JSONObject jsonPoem, long original_poem_id) {
+        try {
+            jsonPoem.put("original_poem_id", original_poem_id);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void setSyncstateJson(JSONObject jsonPoem, int syncstate) {
         try {

@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.realm.Realm;
@@ -65,13 +64,8 @@ public class LoadPoemReceiver extends BroadcastReceiver implements Registerable 
     }
 
     private void customizeJson(JSONObject jsonPoem) {
-        try {
-            jsonPoem.put("syncstate", 2);
-        }
-        catch (JSONException e) {
-            // 参考：http://developer.android.com/intl/ja/reference/org/json/JSONException.html
-            throw new RuntimeException(e);
-        }
+        Poem.setSyncstateJson(jsonPoem, Poem.SYNCSTATE_SYNCED);
+        if (jsonPoem.isNull("original_poem_id")) Poem.setOriginalPoemIdJson(jsonPoem, 0);
     }
 
     @Override

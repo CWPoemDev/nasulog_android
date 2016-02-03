@@ -60,6 +60,7 @@ public class PoemDetailActivity extends AbstractPoemActivity {
         mAPI = new NasulogAPI(getServer(), Prefs.get(this).getString(Prefs.KEY_TOKEN, null));
 
         setupToolbar();
+        setupRepoemButton(poemId);
         requestUser();
         requestPoem(poemId);
 
@@ -78,6 +79,18 @@ public class PoemDetailActivity extends AbstractPoemActivity {
             PoemDetailActivity.this.onBackPressed();
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);// [←] アイコンを有効にする
+    }
+
+    private void setupRepoemButton(long poemId) {
+        findViewById(R.id.btn_repoem).setOnClickListener(v -> {
+            showRepoemActivity(poemId);
+        });
+    }
+
+    private void showRepoemActivity(long poemId) {
+        Intent intent = new Intent(this, ComposeRepoemActivity.class);
+        intent.putExtra(ComposeRepoemActivity.KEY_ORIGINAL_POEM_ID, poemId);
+        startActivity(intent);
     }
 
     private void setText(@IdRes int res, CharSequence text) {
