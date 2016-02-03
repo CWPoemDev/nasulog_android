@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -60,8 +62,10 @@ public class PoemDetailActivity extends AbstractPoemActivity {
         mAPI = new NasulogAPI(getServer(), Prefs.get(this).getString(Prefs.KEY_TOKEN, null));
 
         setupToolbar();
+        setupRepoemButton(poemId);
         requestUser();
         requestPoem(poemId);
+        setupActionButtons(poemId);
 
         Observable<Poem> poemObservable = Realm.getDefaultInstance().where(Poem.class).equalTo("id", poemId).findFirst().asObservable();
         poemObservable.subscribe(poem -> {
@@ -78,6 +82,18 @@ public class PoemDetailActivity extends AbstractPoemActivity {
             PoemDetailActivity.this.onBackPressed();
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);// [←] アイコンを有効にする
+    }
+
+    private void setupRepoemButton(long poemId) {
+        findViewById(R.id.btn_repoem).setOnClickListener(v -> {
+            showRepoemActivity(poemId);
+        });
+    }
+
+    private void showRepoemActivity(long poemId) {
+        Intent intent = new Intent(this, ComposeRepoemActivity.class);
+        intent.putExtra(ComposeRepoemActivity.KEY_ORIGINAL_POEM_ID, poemId);
+        startActivity(intent);
     }
 
     private void setText(@IdRes int res, CharSequence text) {
@@ -167,6 +183,32 @@ public class PoemDetailActivity extends AbstractPoemActivity {
 //
 //        if (isChromiumBasedWebView) WebView.setWebContentsDebuggingEnabled(true);
 //    }
+
+    private void setupActionButtons(long poemId) {
+        findViewById(R.id.btn_edit_poem).setOnClickListener(v -> {
+            Toast.makeText(this, "ごめん、まだ実装してないの・・・", Toast.LENGTH_SHORT).show();
+        });
+        findViewById(R.id.btn_delete_poem).setOnClickListener(v -> {
+            new AlertDialog.Builder(v.getContext())
+                    .setTitle("このポエムを削除しますか？")
+                    .setPositiveButton("削除", (dialog, which) -> {
+                        mAPI.removePoem(poemId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
+                                .subscribe( ret -> {
+                                    Realm.getDefaultInstance().executeTransaction(realm -> {
+                                        realm.where(Poem.class).equalTo("id", poemId).findFirst().removeFromRealm();
+                                    });
+                                    finish();
+                                }, err -> {
+                                    Toast.makeText(v.getContext(), "error", Toast.LENGTH_SHORT).show();
+                                    Log.e(TAG, "error", err);
+                                });
+                    })
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        dialog.dismiss();
+                    })
+                    .show();
+        });
+    }
 
     protected String getServer(){
         return Prefs.get(this).getString(Prefs.KEY_SERVER,null);

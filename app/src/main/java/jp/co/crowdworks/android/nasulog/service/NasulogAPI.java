@@ -56,6 +56,28 @@ public class NasulogAPI {
         });
     }
 
+    private Observable<Response> rxDELETE(final String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Cookie", "_nasulog_session="+ mToken)
+                .delete()
+                .build();
+
+        return Observable.create(subscriber -> {
+            try {
+                Response response = OkHttpHelper.getClient().newCall(request).execute();
+                if (response.isSuccessful()) {
+                    subscriber.onNext(response);
+                    subscriber.onCompleted();
+                }
+                else subscriber.onError(new HttpError(response));
+            } catch (IOException e) {
+                subscriber.onError(e);
+            }
+        });
+    }
+
+
     public Observable<Response> checkConnection() {
         String url = "http://"+mHost+"/api/poems.json";
         return rxGET(url, false); //302はログイン画面に飛ばされる動作なので、エラー扱い
@@ -192,6 +214,24 @@ public class NasulogAPI {
 
     }
 
+    public Observable<JSONObject> quotePoem(long poemId) {
+        String url = "http://"+mHost+"/api/poems/"+poemId+"/quote.json";
+
+        return rxGET(url).flatMap(response ->
+                Observable.create(subscriber -> {
+                    try {
+                        JSONObject poem = new JSONObject(response.body().string()).getJSONObject("poem");
+                        subscriber.onNext(poem);
+                        subscriber.onCompleted();
+                    }
+                    catch (Exception e) {
+                        subscriber.onError(e);
+                    }
+                })
+        );
+
+    }
+
     public Observable<Boolean> setPoemRead(long poemId) {
         String url = "http://"+mHost+"/api/poems/"+poemId+"/read_poems.json";
 
@@ -219,4 +259,21 @@ public class NasulogAPI {
             }
         });
     }
+
+    public Observable<Boolean> removePoem(long poemId) {
+        String url = "http://"+mHost+"/api/poems/"+poemId+".json";
+
+        return rxDELETE(url).flatMap(response ->
+                Observable.create(subscriber -> {
+                    try {
+                        subscriber.onNext(true);
+                        subscriber.onCompleted();
+                    }
+                    catch (Exception e) {
+                        subscriber.onError(e);
+                    }
+                })
+        );
+    }
+
 }
