@@ -43,6 +43,22 @@ public class Poem extends RealmObject {
     public void setCreated_at(Date created_at) { this.created_at = created_at; }
     public void setOriginal_poem_id(long original_poem_id) { this.original_poem_id = original_poem_id; }
 
+    public static void setIdJson(JSONObject jsonPoem, long id) {
+        try {
+            jsonPoem.put("id", id);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void setOriginalPoemIdJson(JSONObject jsonPoem, long original_poem_id) {
+        try {
+            jsonPoem.put("original_poem_id", original_poem_id);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void setSyncstateJson(JSONObject jsonPoem, int syncstate) {
         try {
             jsonPoem.put("syncstate", syncstate);

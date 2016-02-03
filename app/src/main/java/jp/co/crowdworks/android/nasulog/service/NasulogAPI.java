@@ -192,6 +192,24 @@ public class NasulogAPI {
 
     }
 
+    public Observable<JSONObject> quotePoem(long poemId) {
+        String url = "http://"+mHost+"/api/poems/"+poemId+"/quote.json";
+
+        return rxGET(url).flatMap(response ->
+                Observable.create(subscriber -> {
+                    try {
+                        JSONObject poem = new JSONObject(response.body().string()).getJSONObject("poem");
+                        subscriber.onNext(poem);
+                        subscriber.onCompleted();
+                    }
+                    catch (Exception e) {
+                        subscriber.onError(e);
+                    }
+                })
+        );
+
+    }
+
     public Observable<Boolean> setPoemRead(long poemId) {
         String url = "http://"+mHost+"/api/poems/"+poemId+"/read_poems.json";
 
