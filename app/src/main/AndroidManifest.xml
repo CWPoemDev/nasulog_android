@@ -36,6 +36,11 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
 
+        <activity android:name=".activity.ComposeRepoemActivity"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+
         <service android:name=".service.NasulogAPIService"/>
     </application>
 
