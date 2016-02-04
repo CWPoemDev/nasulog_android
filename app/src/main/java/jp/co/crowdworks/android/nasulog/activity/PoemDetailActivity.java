@@ -185,29 +185,41 @@ public class PoemDetailActivity extends AbstractPoemActivity {
 //    }
 
     private void setupActionButtons(long poemId) {
-        findViewById(R.id.btn_edit_poem).setOnClickListener(v -> {
-            Toast.makeText(this, "ごめん、まだ実装してないの・・・", Toast.LENGTH_SHORT).show();
-        });
-        findViewById(R.id.btn_delete_poem).setOnClickListener(v -> {
-            new AlertDialog.Builder(v.getContext())
-                    .setTitle("このポエムを削除しますか？")
-                    .setPositiveButton("削除", (dialog, which) -> {
-                        mAPI.removePoem(poemId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
-                                .subscribe( ret -> {
-                                    Realm.getDefaultInstance().executeTransaction(realm -> {
-                                        realm.where(Poem.class).equalTo("id", poemId).findFirst().removeFromRealm();
+        final View btnEdit = findViewById(R.id.btn_edit_poem);
+        final View btnDelete = findViewById(R.id.btn_delete_poem);
+
+        Poem poem = Realm.getDefaultInstance().where(Poem.class).equalTo("id", poemId).findFirst();
+        if (poem == null || poem.getAuthor()==null || TextUtils.isEmpty(poem.getAuthor().getEmail())) {
+            btnEdit.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.GONE);
+        }
+        else {
+            btnEdit.setVisibility(View.VISIBLE);
+            btnEdit.setOnClickListener(v -> {
+                Toast.makeText(this, "ごめん、まだ実装してないの・・・", Toast.LENGTH_SHORT).show();
+            });
+            btnDelete.setVisibility(View.VISIBLE);
+            btnDelete.setOnClickListener(v -> {
+                new AlertDialog.Builder(v.getContext())
+                        .setTitle("このポエムを削除しますか？")
+                        .setPositiveButton("削除", (dialog, which) -> {
+                            mAPI.removePoem(poemId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(ret -> {
+                                        Realm.getDefaultInstance().executeTransaction(realm -> {
+                                            realm.where(Poem.class).equalTo("id", poemId).findFirst().removeFromRealm();
+                                        });
+                                        finish();
+                                    }, err -> {
+                                        Toast.makeText(v.getContext(), "error", Toast.LENGTH_SHORT).show();
+                                        Log.e(TAG, "error", err);
                                     });
-                                    finish();
-                                }, err -> {
-                                    Toast.makeText(v.getContext(), "error", Toast.LENGTH_SHORT).show();
-                                    Log.e(TAG, "error", err);
-                                });
-                    })
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                        dialog.dismiss();
-                    })
-                    .show();
-        });
+                        })
+                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+            });
+        }
     }
 
     protected String getServer(){
