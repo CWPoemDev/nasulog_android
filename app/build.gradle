@@ -16,8 +16,8 @@ android {
         applicationId "jp.co.crowdworks.android.nasulog"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 8
-        versionName "0.0.4"
+        versionCode 9
+        versionName "0.0.4_r1"
     }
     signingConfigs {
         release {
