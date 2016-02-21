@@ -106,4 +106,14 @@ public class LoginFragment extends AbstractWebViewFragment {
         }
         mCookieAcquired = true;
     }
+
+    @Override
+    public boolean onBackPressed() {
+        if(super.onBackPressed()) return true;
+
+        Prefs.get(getContext()).edit()
+                .remove(Prefs.KEY_SERVER)
+                .commit();
+        return true;
+    }
 }

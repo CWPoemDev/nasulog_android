@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import jp.co.crowdworks.android.nasulog.Prefs;
 import jp.co.crowdworks.android.nasulog.R;
 import jp.co.crowdworks.android.nasulog.helper.HttpError;
+import jp.co.crowdworks.android.nasulog.helper.OnBackPressListener;
 import jp.co.crowdworks.android.nasulog.helper.RedirectNotAllowdError;
 import jp.co.crowdworks.android.nasulog.service.NasulogAPI;
 import rx.Observable;
@@ -17,7 +18,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.internal.util.SubscriptionList;
 import rx.schedulers.Schedulers;
 
-public class ServerConnectingFragment extends AbstractFragment {
+public class ServerConnectingFragment extends AbstractFragment implements OnBackPressListener {
     private static final String TAG = ServerConnectingFragment.class.getName();
     public ServerConnectingFragment(){}
 
@@ -110,5 +111,14 @@ public class ServerConnectingFragment extends AbstractFragment {
             mSub.unsubscribe();
             mSub = null;
         }
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        Prefs.get(getContext()).edit()
+                .remove(Prefs.KEY_TOKEN)
+                .remove(Prefs.KEY_TOKEN_VERIFIED)
+                .commit();
+        return true;
     }
 }
