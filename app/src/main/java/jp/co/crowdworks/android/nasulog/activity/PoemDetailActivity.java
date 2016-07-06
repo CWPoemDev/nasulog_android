@@ -206,7 +206,7 @@ public class PoemDetailActivity extends AbstractPoemActivity {
                             mAPI.removePoem(poemId).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(ret -> {
                                         Realm.getDefaultInstance().executeTransaction(realm -> {
-                                            realm.where(Poem.class).equalTo("id", poemId).findFirst().removeFromRealm();
+                                            realm.where(Poem.class).equalTo("id", poemId).findFirst().deleteFromRealm();
                                         });
                                         finish();
                                     }, err -> {

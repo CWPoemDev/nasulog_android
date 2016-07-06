@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'realm-android'
 
 def getKeyStore() {
     def path = System.getenv("KEYSTORE_PATH")
@@ -50,8 +51,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'com.github.thorbenprimke:realm-recyclerview:0.9.12'
-    compile 'io.realm:realm-android:0.87.2'
+    compile 'com.github.thorbenprimke:realm-recyclerview:0.9.22'
 
     compile 'com.facebook.stetho:stetho:1.3.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.3.0'

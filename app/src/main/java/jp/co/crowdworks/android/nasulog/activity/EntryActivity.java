@@ -95,8 +95,8 @@ public class EntryActivity extends AbstractFrameLayoutActivity {
         protected void action() {
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
-            realm.clear(Poem.class);
-            realm.clear(User.class);
+            realm.delete(Poem.class);
+            realm.delete(User.class);
             realm.commitTransaction();
 
             LaunchUtil.showPoemListActivity(EntryActivity.this);

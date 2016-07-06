@@ -60,9 +60,9 @@ public class ComposeRepoemActivity extends ComposePoemActivity {
     protected void onResume() {
         super.onResume();
 
-        query().addChangeListener(new RealmChangeListener() {
+        query().addChangeListener(new RealmChangeListener<RealmResults<Poem>>() {
             @Override
-            public void onChange() {
+            public void onChange(RealmResults<Poem> results) {
                 ArrayList<Poem> poems = new ArrayList<>();
                 for(Poem poem: query()) poems.add(poem); //REMARK: いったんResultsのループを終わらせないと、「ループ中にレコード更新するな！」てきなエラーが出る
                 for(Poem poem: poems) {
@@ -70,7 +70,7 @@ public class ComposeRepoemActivity extends ComposePoemActivity {
 
                     if (poem.getSyncstate() == Poem.SYNCSTATE_SYNCED || poem.getSyncstate() == Poem.SYNCSTATE_SYNC_FAILED) {
                         Realm.getDefaultInstance().executeTransaction(realm -> {
-                            poem.removeFromRealm();
+                            poem.deleteFromRealm();
                         });
                     }
                 }
