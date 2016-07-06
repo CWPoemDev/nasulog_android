@@ -48,7 +48,7 @@ public class QuotePoemObserver extends AbstractRealmObserver<Poem> {
                         @Override
                         public void execute(Realm realm) {
                             Poem newPoem = realm.createOrUpdateObjectFromJson(Poem.class, jsonPoem);
-                            if (newPoem.getId() != poem.getId()) poem.removeFromRealm();
+                            if (newPoem.getId() != poem.getId()) poem.deleteFromRealm();
                         }
                     });
                 }, err -> {

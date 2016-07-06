@@ -8,7 +8,7 @@ import io.realm.RealmObject;
 import io.realm.RealmResults;
 import jp.co.crowdworks.android.nasulog.service.NasulogAPI;
 
-abstract class AbstractRealmObserver<T extends RealmObject> implements Registerable, RealmChangeListener {
+abstract class AbstractRealmObserver<T extends RealmObject> implements Registerable, RealmChangeListener<RealmResults<T>> {
     protected final Context mContext;
     protected final NasulogAPI mAPI;
     private RealmResults<T> mResults;
@@ -36,5 +36,9 @@ abstract class AbstractRealmObserver<T extends RealmObject> implements Registera
     }
 
     @Override
+    public void onChange(RealmResults<T> element) {
+        onChange();
+    }
+
     public abstract void onChange();
 }

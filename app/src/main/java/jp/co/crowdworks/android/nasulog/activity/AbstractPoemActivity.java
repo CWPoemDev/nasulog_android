@@ -181,8 +181,8 @@ abstract class AbstractPoemActivity extends AbstractActivity {
     private void logout(){
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        realm.clear(Poem.class);
-        realm.clear(User.class);
+        realm.delete(Poem.class);
+        realm.delete(User.class);
         realm.commitTransaction();
 
         CookieManager.getInstance().removeAllCookie();
